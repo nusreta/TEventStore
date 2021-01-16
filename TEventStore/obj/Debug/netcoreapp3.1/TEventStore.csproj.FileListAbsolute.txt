@@ -1,0 +1,8 @@
+C:\Users\User\source\repos\TEventStore\TEventStore\bin\Debug\netcoreapp3.1\TEventStore.deps.json
+C:\Users\User\source\repos\TEventStore\TEventStore\bin\Debug\netcoreapp3.1\TEventStore.dll
+C:\Users\User\source\repos\TEventStore\TEventStore\bin\Debug\netcoreapp3.1\TEventStore.pdb
+C:\Users\User\source\repos\TEventStore\TEventStore\obj\Debug\netcoreapp3.1\TEventStore.AssemblyInfoInputs.cache
+C:\Users\User\source\repos\TEventStore\TEventStore\obj\Debug\netcoreapp3.1\TEventStore.AssemblyInfo.cs
+C:\Users\User\source\repos\TEventStore\TEventStore\obj\Debug\netcoreapp3.1\TEventStore.csproj.CoreCompileInputs.cache
+C:\Users\User\source\repos\TEventStore\TEventStore\obj\Debug\netcoreapp3.1\TEventStore.dll
+C:\Users\User\source\repos\TEventStore\TEventStore\obj\Debug\netcoreapp3.1\TEventStore.pdb
