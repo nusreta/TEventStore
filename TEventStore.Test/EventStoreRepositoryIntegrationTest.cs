@@ -7,16 +7,21 @@ using Xunit;
 
 namespace TEventStore.Test
 {
-    public class EventStoreRepositoryTest : DbInitSetUp
+    public class EventStoreRepositoryIntegrationTest : DbInitSetUp
     {
         private readonly EventStoreRepository _eventStoreRepository;
 
-        public EventStoreRepositoryTest()
+        public EventStoreRepositoryIntegrationTest()
         {
             _eventStoreRepository = new EventStoreRepository(ConnectionFactory);
         }
 
+
+#if DEBUG
         [Fact]
+#else
+        [Fact(Skip = "Integrated unit test")]
+#endif
         public async Task InsertAsync_GetAsync_SingleAggregate()
         {
             // Given
@@ -39,7 +44,11 @@ namespace TEventStore.Test
             Assert.Equal(booCreated.GetType(), results.Single(x => x.AggregateId == booId).Event.GetType());
         }
 
+#if DEBUG
         [Fact]
+#else
+        [Fact(Skip = "Integrated unit test")]
+#endif
         public async Task InsertAsync_GetAsync_SingleAggregate_MultipleEvents()
         {
             // Given
@@ -66,7 +75,11 @@ namespace TEventStore.Test
         }
 
 
+#if DEBUG
         [Fact]
+#else
+        [Fact(Skip = "Integrated unit test")]
+#endif
         public async Task InsertAsync_GetAsync_MultipleAggregates()
         {
             // Given
@@ -106,7 +119,11 @@ namespace TEventStore.Test
         }
 
 
+#if DEBUG
         [Fact]
+#else
+        [Fact(Skip = "Integrated unit test")]
+#endif
         public async Task InsertAsync_GetAsync_MultipleAggregateTypes()
         {
             // Given
@@ -145,7 +162,11 @@ namespace TEventStore.Test
             Assert.Equal(fooRegistered.GetType(), resultsFoo.Single(x => x.AggregateId == fooId).Event.GetType());
         }
 
+#if DEBUG
         [Fact]
+#else
+        [Fact(Skip = "Integrated unit test")]
+#endif
         public async Task PropertiesCheck()
         {
             // Given
@@ -174,7 +195,11 @@ namespace TEventStore.Test
             Assert.Equal(1, results.First().Sequence);
         }
 
+#if DEBUG
         [Fact]
+#else
+        [Fact(Skip = "Integrated unit test")]
+#endif
         public async Task ConcurrencyCheck()
         {
             // Given
