@@ -2,7 +2,7 @@
 
   <PropertyGroup>
     <TargetFramework>netcoreapp3.1</TargetFramework>
-    <Authors>nusreta</Authors>
+    <Authors>nusreta, anes, tarik, damir, nermin, tacta.io</Authors>
     <Company>tacta</Company>
     <PackageTags>eventstore</PackageTags>
     <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
@@ -10,6 +10,7 @@
     <PackageProjectUrl></PackageProjectUrl>
     <RepositoryUrl>https://github.com/nusreta/TEventStore</RepositoryUrl>
     <PackageLicenseExpression>Apache-2.0</PackageLicenseExpression>
+    <Version>1.0.1</Version>
   </PropertyGroup>
 
   <ItemGroup>
