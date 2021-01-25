@@ -4,20 +4,17 @@ using Dapper;
 
 namespace TEventStore.Test
 {
-    public abstract class DbInitSetUp : IDisposable
+    public abstract class SqlBaseTest : IDisposable
     {
         public static ISqlConnectionFactory ConnectionFactory;
 
-        private static readonly string Database = 
-            $"TmpTestDb{Guid.NewGuid().ToString("n").Substring(0, 8)}";
+        private static readonly string Database = $"TmpTestDb{Guid.NewGuid().ToString("n").Substring(0, 8)}";
 
-        private const string MasterConnectionString = 
-            @"Server=(localdb)\mssqlLocaldb; Database=master; Trusted_Connection=True;";
+        private const string MasterConnectionString = @"Server=(localdb)\mssqlLocaldb; Database=master; Trusted_Connection=True;";
 
-        protected readonly string ConnectionString = 
-            $@"Server=(localdb)\mssqlLocaldb; Database={Database}; Trusted_Connection=True;";
+        protected readonly string ConnectionString = $@"Server=(localdb)\mssqlLocaldb; Database={Database}; Trusted_Connection=True;";
 
-        protected DbInitSetUp() => CreateDatabase();
+        protected SqlBaseTest() => CreateDatabase();
 
         public void Dispose() => DeleteDatabase();
 

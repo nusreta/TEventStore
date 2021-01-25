@@ -3,7 +3,7 @@ using Newtonsoft.Json;
 
 namespace TEventStore.Test.DomainEvents
 {
-    public abstract class DomainEvent : IDomainEvent
+    public abstract class DomainEvent
     {
         public Guid Id { get; }
 
@@ -11,11 +11,9 @@ namespace TEventStore.Test.DomainEvents
 
         public string AggregateId { get; }
 
-        protected DomainEvent(string aggregateId) =>
-            (Id, CreatedAt, AggregateId) = (Guid.NewGuid(), DateTime.Now, aggregateId);
+        protected DomainEvent(string aggregateId) => (Id, CreatedAt, AggregateId) = (Guid.NewGuid(), DateTime.Now, aggregateId);
 
         [JsonConstructor]
-        protected DomainEvent(Guid id, string aggregateId, DateTime createdAt) =>
-            (Id, AggregateId, CreatedAt) = (id, aggregateId, createdAt);
+        protected DomainEvent(Guid id, string aggregateId, DateTime createdAt) => (Id, AggregateId, CreatedAt) = (id, aggregateId, createdAt);
     }
 }

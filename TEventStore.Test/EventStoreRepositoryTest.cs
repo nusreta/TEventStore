@@ -7,21 +7,17 @@ using Xunit;
 
 namespace TEventStore.Test
 {
-    public class EventStoreRepositoryIntegrationTest : DbInitSetUp
+    public class EventStoreRepositoryTest : SqlBaseTest
     {
         private readonly EventStoreRepository _eventStoreRepository;
 
-        public EventStoreRepositoryIntegrationTest()
+        public EventStoreRepositoryTest()
         {
             _eventStoreRepository = new EventStoreRepository(ConnectionFactory);
         }
 
 
-#if DEBUG
         [Fact]
-#else
-        [Fact(Skip = "Integrated unit test")]
-#endif
         public async Task InsertAsync_GetAsync_SingleAggregate()
         {
             // Given
@@ -30,25 +26,21 @@ namespace TEventStore.Test
 
             // When
             var aggregateRecord = new AggregateRecord(booId, "Boo", 0);
-            var eventRecords = new List<EventRecord<IDomainEvent>>
+            var eventRecords = new List<EventRecord<DomainEvent>>
             {
-                new EventRecord<IDomainEvent>(booCreated.Id, booCreated.CreatedAt, booCreated)
+                new EventRecord<DomainEvent>(booCreated.Id, booCreated.CreatedAt, booCreated)
             };
 
             await _eventStoreRepository.SaveAsync(aggregateRecord, eventRecords).ConfigureAwait(false);
 
             // Then
-            var results = await _eventStoreRepository.GetAsync<IDomainEvent>(booId).ConfigureAwait(false);
+            var results = await _eventStoreRepository.GetAsync<DomainEvent>(booId).ConfigureAwait(false);
 
             Assert.Equal(1, results.Count);
             Assert.Equal(booCreated.GetType(), results.Single(x => x.AggregateId == booId).Event.GetType());
         }
 
-#if DEBUG
         [Fact]
-#else
-        [Fact(Skip = "Integrated unit test")]
-#endif
         public async Task InsertAsync_GetAsync_SingleAggregate_MultipleEvents()
         {
             // Given
@@ -58,16 +50,16 @@ namespace TEventStore.Test
 
             // When
             var aggregateRecord = new AggregateRecord(booId, "Boo", 0);
-            var eventRecords = new List<EventRecord<IDomainEvent>>
+            var eventRecords = new List<EventRecord<DomainEvent>>
             {
-                new EventRecord<IDomainEvent>(booCreated.Id, booCreated.CreatedAt, booCreated),
-                new EventRecord<IDomainEvent>(booActivated.Id, booActivated.CreatedAt, booActivated)
+                new EventRecord<DomainEvent>(booCreated.Id, booCreated.CreatedAt, booCreated),
+                new EventRecord<DomainEvent>(booActivated.Id, booActivated.CreatedAt, booActivated)
             };
 
             await _eventStoreRepository.SaveAsync(aggregateRecord, eventRecords).ConfigureAwait(false);
 
             // Then
-            var results = await _eventStoreRepository.GetAsync<IDomainEvent>(booId).ConfigureAwait(false);
+            var results = await _eventStoreRepository.GetAsync<DomainEvent>(booId).ConfigureAwait(false);
 
             Assert.Equal(2, results.Count);
             Assert.Equal(booCreated.GetType(), results.Single(x => x.Version == 1).Event.GetType());
@@ -75,11 +67,7 @@ namespace TEventStore.Test
         }
 
 
-#if DEBUG
         [Fact]
-#else
-        [Fact(Skip = "Integrated unit test")]
-#endif
         public async Task InsertAsync_GetAsync_MultipleAggregates()
         {
             // Given
@@ -91,39 +79,35 @@ namespace TEventStore.Test
 
             // When
             var aggregateRecordBoo1 = new AggregateRecord(booId1, "Boo", 0);
-            var eventRecordsBoo1 = new List<EventRecord<IDomainEvent>>
+            var eventRecordsBoo1 = new List<EventRecord<DomainEvent>>
             {
-                new EventRecord<IDomainEvent>(booCreated1.Id, booCreated1.CreatedAt, booCreated1)
+                new EventRecord<DomainEvent>(booCreated1.Id, booCreated1.CreatedAt, booCreated1)
             };
 
             await _eventStoreRepository.SaveAsync(aggregateRecordBoo1, eventRecordsBoo1).ConfigureAwait(false);
 
             var aggregateRecordBoo2 = new AggregateRecord(booId2, "Boo", 1);
-            var eventRecordsBoo2 = new List<EventRecord<IDomainEvent>>
+            var eventRecordsBoo2 = new List<EventRecord<DomainEvent>>
             {
-                new EventRecord<IDomainEvent>(booCreated2.Id, booCreated2.CreatedAt, booCreated2)
+                new EventRecord<DomainEvent>(booCreated2.Id, booCreated2.CreatedAt, booCreated2)
             };
 
             await _eventStoreRepository.SaveAsync(aggregateRecordBoo2, eventRecordsBoo2).ConfigureAwait(false);
 
             // Then
-            var resultsBoo1 = await _eventStoreRepository.GetAsync<IDomainEvent>(booId1).ConfigureAwait(false);
+            var resultsBoo1 = await _eventStoreRepository.GetAsync<DomainEvent>(booId1).ConfigureAwait(false);
 
             Assert.Equal(1, resultsBoo1.Count);
             Assert.Equal(booCreated1.GetType(), resultsBoo1.Single(x => x.AggregateId == booId1).Event.GetType());
 
-            var resultsBoo2 = await _eventStoreRepository.GetAsync<IDomainEvent>(booId2).ConfigureAwait(false);
+            var resultsBoo2 = await _eventStoreRepository.GetAsync<DomainEvent>(booId2).ConfigureAwait(false);
 
             Assert.Equal(1, resultsBoo2.Count);
             Assert.Equal(booCreated2.GetType(), resultsBoo2.Single(x => x.AggregateId == booId2).Event.GetType());
         }
 
 
-#if DEBUG
         [Fact]
-#else
-        [Fact(Skip = "Integrated unit test")]
-#endif
         public async Task InsertAsync_GetAsync_MultipleAggregateTypes()
         {
             // Given
@@ -135,38 +119,34 @@ namespace TEventStore.Test
 
             // When
             var aggregateRecordBoo = new AggregateRecord(booId, "Boo", 0);
-            var eventRecordsBoo = new List<EventRecord<IDomainEvent>>
+            var eventRecordsBoo = new List<EventRecord<DomainEvent>>
             {
-                new EventRecord<IDomainEvent>(booCreated.Id, booCreated.CreatedAt, booCreated)
+                new EventRecord<DomainEvent>(booCreated.Id, booCreated.CreatedAt, booCreated)
             };
 
             await _eventStoreRepository.SaveAsync(aggregateRecordBoo, eventRecordsBoo).ConfigureAwait(false);
 
             var aggregateRecordFoo = new AggregateRecord(fooId, "Foo", 0);
-            var eventRecordsFoo = new List<EventRecord<IDomainEvent>>
+            var eventRecordsFoo = new List<EventRecord<DomainEvent>>
             {
-                new EventRecord<IDomainEvent>(fooRegistered.Id, fooRegistered.CreatedAt, fooRegistered)
+                new EventRecord<DomainEvent>(fooRegistered.Id, fooRegistered.CreatedAt, fooRegistered)
             };
 
             await _eventStoreRepository.SaveAsync(aggregateRecordFoo, eventRecordsFoo).ConfigureAwait(false);
 
             // Then
-            var resultsBoo = await _eventStoreRepository.GetAsync<IDomainEvent>(booId).ConfigureAwait(false);
+            var resultsBoo = await _eventStoreRepository.GetAsync<DomainEvent>(booId).ConfigureAwait(false);
 
             Assert.Equal(1, resultsBoo.Count);
             Assert.Equal(booCreated.GetType(), resultsBoo.Single(x => x.AggregateId == booId).Event.GetType());
 
-            var resultsFoo = await _eventStoreRepository.GetAsync<IDomainEvent>(fooId).ConfigureAwait(false);
+            var resultsFoo = await _eventStoreRepository.GetAsync<DomainEvent>(fooId).ConfigureAwait(false);
 
             Assert.Equal(1, resultsFoo.Count);
             Assert.Equal(fooRegistered.GetType(), resultsFoo.Single(x => x.AggregateId == fooId).Event.GetType());
         }
 
-#if DEBUG
         [Fact]
-#else
-        [Fact(Skip = "Integrated unit test")]
-#endif
         public async Task PropertiesCheck()
         {
             // Given
@@ -174,13 +154,13 @@ namespace TEventStore.Test
             var booCreated = new BooCreated(booId, 100M, false);
 
             var aggregateRecord = new AggregateRecord(booId, "Boo", 0);
-            var eventRecords = new List<EventRecord<IDomainEvent>>
-                { new EventRecord<IDomainEvent>(booCreated.Id, booCreated.CreatedAt, booCreated) }.AsReadOnly();
+            var eventRecords = new List<EventRecord<DomainEvent>>
+                { new EventRecord<DomainEvent>(booCreated.Id, booCreated.CreatedAt, booCreated) }.AsReadOnly();
 
             await _eventStoreRepository.SaveAsync(aggregateRecord, eventRecords).ConfigureAwait(false);
 
             // When
-            var results = await _eventStoreRepository.GetAsync<IDomainEvent>(booId).ConfigureAwait(false);
+            var results = await _eventStoreRepository.GetAsync<DomainEvent>(booId).ConfigureAwait(false);
 
             // Then
             var @event = results.Single(x => x.AggregateId == booId).Event as BooCreated;
@@ -195,11 +175,7 @@ namespace TEventStore.Test
             Assert.Equal(1, results.First().Sequence);
         }
 
-#if DEBUG
         [Fact]
-#else
-        [Fact(Skip = "Integrated unit test")]
-#endif
         public async Task ConcurrencyCheck()
         {
             // Given
@@ -208,9 +184,9 @@ namespace TEventStore.Test
             var booCreated = new BooCreated(booId, 100M, false);
 
             var aggregateRecord1 = new AggregateRecord(booId, "Boo", theSameVersion);
-            var eventRecords1 = new List<EventRecord<IDomainEvent>>
+            var eventRecords1 = new List<EventRecord<DomainEvent>>
             {
-                new EventRecord<IDomainEvent>(booCreated.Id, booCreated.CreatedAt, booCreated)
+                new EventRecord<DomainEvent>(booCreated.Id, booCreated.CreatedAt, booCreated)
             };
 
             await _eventStoreRepository.SaveAsync(aggregateRecord1, eventRecords1).ConfigureAwait(false);
@@ -219,9 +195,9 @@ namespace TEventStore.Test
             var booActivated = new BooActivated(booId);
 
             var aggregateRecord2 = new AggregateRecord(booId, "Boo", theSameVersion);
-            var eventRecords2 = new List<EventRecord<IDomainEvent>>
+            var eventRecords2 = new List<EventRecord<DomainEvent>>
             {
-                new EventRecord<IDomainEvent>(booActivated.Id, booActivated.CreatedAt, booCreated)
+                new EventRecord<DomainEvent>(booActivated.Id, booActivated.CreatedAt, booCreated)
             };
 
             // Then
