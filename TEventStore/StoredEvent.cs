@@ -12,5 +12,14 @@ namespace TEventStore
         public string Name { get; set; }
         public DateTime CreatedAt { get; set; }
         public string Payload { get; set; }
+
+        public static string InsertQuery =
+            @"INSERT INTO [dbo].[EventStore] 
+                ([Id], [Name], [AggregateId], [Aggregate], [Version], [CreatedAt], [Payload]) 
+                    VALUES (@Id, @Name, @AggregateId, @Aggregate, @Version, @CreatedAt, @Payload);";
+
+        public static string SelectQuery =
+            @"SELECT [Id], [AggregateId], [Version], [CreatedAt], [Payload], [Sequence] 
+                FROM [dbo].[EventStore] WHERE [AggregateId] = @AggregateId";
     }
 }

@@ -37,17 +37,17 @@ namespace TEventStore
 
             await using var connection = _sqlConnectionFactory.SqlConnection();
 
-            await connection.ExecuteAsync(SqlQueries.InsertEvents, records);
+            await connection.ExecuteAsync(StoredEvent.InsertQuery, records);
         }
 
         public async Task<IReadOnlyCollection<EventStoreRecord<T>>> GetAsync<T>(string aggregateId)
         {
-            if (aggregateId == null) return new List<EventStoreRecord<T>>();
+            if (string.IsNullOrWhiteSpace(aggregateId)) return new List<EventStoreRecord<T>>();
 
             await using var connection = _sqlConnectionFactory.SqlConnection();
 
             var storedEvents = (await connection
-                .QueryAsync<StoredEvent>(SqlQueries.SelectEvents, new { AggregateId = aggregateId })).ToList().AsReadOnly();
+                .QueryAsync<StoredEvent>(StoredEvent.SelectQuery, new { AggregateId = aggregateId })).ToList().AsReadOnly();
 
             if (!storedEvents.Any()) return new List<EventStoreRecord<T>>();
 
