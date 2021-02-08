@@ -1,11 +1,11 @@
 language: shell
-mono: none
-dotnet: 3.1.302
+os: windows
 
 before_script:
 - choco install mssqlserver2014-sqllocaldb
 - powershell -Command "Set-ExecutionPolicy Bypass"
 
 script:
-  - dotnet restore 
+  - dotnet restore
+  - dotnet build
   - dotnet test
