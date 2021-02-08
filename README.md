@@ -38,7 +38,7 @@ public interface IEventStoreRepository
 
 ## Concurrency check
 
-```UNIQUE NONCLUSTERED INDEX [ConcurrencyCheckIndex]``` does not allow saving two events with the same version for an aggregate root.
+Unique non clustered index ```ConcurrencyCheckIndex``` does not allow saving two events with the same version for an aggregate root.
 
 ## Licence
 
@@ -46,7 +46,7 @@ public interface IEventStoreRepository
 
 ## Next release
 
-- Custom exception needs to be thrown instead of SqlException in case that concurrency check fails
+- Custom exception needs to be thrown instead of ```SqlException``` in case that concurrency check fails
 ```csharp
 ConcurrencyCheckFailedException
 ```
