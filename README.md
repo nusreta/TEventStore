@@ -5,7 +5,7 @@
 
 
 The package handles any type of domain event. Domain events do not need to inherit specific interface. 
-```TEventStore``` serializes and stores a domain event in a ```MSSMQL``` database as ```JSON``` with additional aggregate root's metadata.
+```TEventStore``` serializes and stores a domain event in a ```MSSQL``` database as ```JSON``` with additional aggregate root's metadata.
 It provides aggregate root versioning and concurrency checking.
 
 ## Prerequisites
@@ -31,8 +31,8 @@ It results in creating ```dbo.EventStore``` table with following columns:
 ```csharp
 public interface IEventStoreRepository
 {
-	Task SaveAsync<T>(AggregateRecord aggregateRecord, IReadOnlyCollection<EventRecord<T>> eventRecords);
-	Task<IReadOnlyCollection<EventStoreRecord<T>>> GetAsync<T>(string aggregateId);
+     Task SaveAsync<T>(AggregateRecord aggregateRecord, IReadOnlyCollection<EventRecord<T>> eventRecords);
+     Task<IReadOnlyCollection<EventStoreRecord<T>>> GetAsync<T>(string aggregateId);
 }
 ```
 
@@ -46,7 +46,7 @@ public interface IEventStoreRepository
 
 ## Next release
 
-- Custom exception needs to be thrown instead of SqlException in case concurrency check fails
+- Custom exception needs to be thrown instead of SqlException in case that concurrency check fails
 ```csharp
 ConcurrencyCheckFailedException
 ```
