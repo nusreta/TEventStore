@@ -21,5 +21,18 @@ namespace TEventStore
         public static string SelectQuery =
             @"SELECT [Id], [AggregateId], [Version], [CreatedAt], [Payload], [Sequence] 
                 FROM [dbo].[EventStore] WHERE [AggregateId] = @AggregateId";
+
+        public static string SelectChunkedWithoutLimitQuery =
+            @"SELECT [Id], [AggregateId], [Version], [CreatedAt], [Payload], [Sequence] 
+                FROM [dbo].[EventStore] 
+                ORDER BY [Sequence]
+                OFFSET @Skip ROWS";
+
+        public static string SelectChunkedWithLimitQuery =
+            @"SELECT [Id], [AggregateId], [Version], [CreatedAt], [Payload], [Sequence] 
+                FROM [dbo].[EventStore] 
+                ORDER BY [Sequence]
+                OFFSET @Skip ROWS
+                FETCH NEXT @Take ROWS ONLY";
     }
 }
