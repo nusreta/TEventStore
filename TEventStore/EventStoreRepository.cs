@@ -61,5 +61,27 @@ namespace TEventStore
                 Sequence = @event.Sequence
             }).ToList().AsReadOnly();
         }
+
+        public async Task<IReadOnlyCollection<EventStoreRecord<T>>> GetFromSequenceAsync<T>(int sequence, int? take = null)
+        {
+            var sql = take.HasValue? StoredEvent.SelectChunkedWithLimitQuery : StoredEvent.SelectChunkedWithoutLimitQuery;
+
+            await using var connection = _sqlConnectionFactory.SqlConnection();
+
+            var storedEvents = (await connection
+                .QueryAsync<StoredEvent>(sql, new { Skip = sequence, Take = take })).ToList().AsReadOnly();
+
+            if (!storedEvents.Any()) return new List<EventStoreRecord<T>>();
+
+            return storedEvents.Select(@event => new EventStoreRecord<T>
+            {
+                Event = JsonConvert.DeserializeObject<T>(@event.Payload, _jsonSerializerSettings),
+                AggregateId = @event.AggregateId,
+                CreatedAt = @event.CreatedAt,
+                Id = @event.Id,
+                Version = @event.Version,
+                Sequence = @event.Sequence
+            }).ToList().AsReadOnly();
+        }
     }
 }

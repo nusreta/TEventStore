@@ -203,5 +203,58 @@ namespace TEventStore.Test
             // Then
             await Assert.ThrowsAsync<SqlException>(() => _eventStoreRepository.SaveAsync(aggregateRecord2, eventRecords2));
         }
+
+        [Theory]
+        [InlineData(0, 50, 4)]
+        [InlineData(1, 50, 3)]
+        [InlineData(1, null, 3)]
+        [InlineData(2, 50, 2)]
+        [InlineData(3, 1, 1)]
+        [InlineData(1, 2, 2)]
+        [InlineData(4, 50, 0)]
+        [InlineData(4, 1, 0)]
+        [InlineData(2, null, 2)]
+        public async Task GetFromSequenceAsync(int sequence, int? take, int count)
+        {
+            // Given
+            await StoreBooCreatedAndActivated("booId1");
+            await StoreFooRegistered("fooId1");
+            await StoreFooRegistered("fooId2");
+
+            // When
+            var eventStoreRecords = await _eventStoreRepository.GetFromSequenceAsync<DomainEvent>(sequence, take).ConfigureAwait(false);
+
+            // Then
+            Assert.Equal(count, eventStoreRecords.Count);
+        }
+
+       
+        private async Task StoreFooRegistered(string fooId)
+        {
+            var fooRegistered1 = new FooRegistered(fooId, "testing foo");
+
+            var aggregateRecordFoo1 = new AggregateRecord(fooId, "Foo", 0);
+            var eventRecordsFoo1 = new List<EventRecord<DomainEvent>>
+            {
+                new EventRecord<DomainEvent>(fooRegistered1.Id, fooRegistered1.CreatedAt, fooRegistered1)
+            };
+
+            await _eventStoreRepository.SaveAsync(aggregateRecordFoo1, eventRecordsFoo1).ConfigureAwait(false);
+        }
+
+        private async Task StoreBooCreatedAndActivated(string booId)
+        {
+            var booCreated = new BooCreated(booId, 100M, false);
+            var booActivated = new BooActivated(booId);
+
+            var aggregateRecordBoo = new AggregateRecord(booId, "Boo", 0);
+            var eventRecordsBoo = new List<EventRecord<DomainEvent>>
+            {
+                new EventRecord<DomainEvent>(booCreated.Id, booCreated.CreatedAt, booCreated),
+                new EventRecord<DomainEvent>(booCreated.Id, booActivated.CreatedAt, booActivated)
+            };
+
+            await _eventStoreRepository.SaveAsync(aggregateRecordBoo, eventRecordsBoo).ConfigureAwait(false);
+        }
     }
 }
