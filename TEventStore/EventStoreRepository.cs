@@ -62,14 +62,14 @@ namespace TEventStore
             }).ToList().AsReadOnly();
         }
 
-        public async Task<IReadOnlyCollection<EventStoreRecord<T>>> GetFromCheckpointAsync<T>(long checkpoint, int? chunkSize = null)
+        public async Task<IReadOnlyCollection<EventStoreRecord<T>>> GetFromSequenceAsync<T>(int sequence, int? take = null)
         {
-            var sql = chunkSize.HasValue? StoredEvent.SelectChunkedWithLimitQuery : StoredEvent.SelectChunkedWithoutLimitQuery;
+            var sql = take.HasValue? StoredEvent.SelectChunkedWithLimitQuery : StoredEvent.SelectChunkedWithoutLimitQuery;
 
             await using var connection = _sqlConnectionFactory.SqlConnection();
 
             var storedEvents = (await connection
-                .QueryAsync<StoredEvent>(sql, new { Skip = checkpoint, Take = chunkSize })).ToList().AsReadOnly();
+                .QueryAsync<StoredEvent>(sql, new { Skip = sequence, Take = take })).ToList().AsReadOnly();
 
             if (!storedEvents.Any()) return new List<EventStoreRecord<T>>();
 
