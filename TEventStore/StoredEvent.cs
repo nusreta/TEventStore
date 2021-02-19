@@ -25,14 +25,13 @@ namespace TEventStore
         public static string SelectChunkedWithoutLimitQuery =
             @"SELECT [Id], [AggregateId], [Version], [CreatedAt], [Payload], [Sequence] 
                 FROM [dbo].[EventStore] 
-                ORDER BY [Sequence]
-                OFFSET @Skip ROWS";
+                WHERE [Sequence] > @Sequence
+                ORDER BY [Sequence]";
 
         public static string SelectChunkedWithLimitQuery =
-            @"SELECT [Id], [AggregateId], [Version], [CreatedAt], [Payload], [Sequence] 
+            @"SELECT TOP (@Take) [Id], [AggregateId], [Version], [CreatedAt], [Payload], [Sequence] 
                 FROM [dbo].[EventStore] 
-                ORDER BY [Sequence]
-                OFFSET @Skip ROWS
-                FETCH NEXT @Take ROWS ONLY";
+                WHERE [Sequence] > @Sequence
+                ORDER BY [Sequence]";
     }
 }

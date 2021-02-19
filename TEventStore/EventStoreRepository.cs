@@ -69,7 +69,7 @@ namespace TEventStore
             await using var connection = _sqlConnectionFactory.SqlConnection();
 
             var storedEvents = (await connection
-                .QueryAsync<StoredEvent>(sql, new { Skip = sequence, Take = take })).ToList().AsReadOnly();
+                .QueryAsync<StoredEvent>(sql, new { Sequence = sequence, Take = take })).ToList().AsReadOnly();
 
             if (!storedEvents.Any()) return new List<EventStoreRecord<T>>();
 
