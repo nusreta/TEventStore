@@ -203,5 +203,52 @@ namespace TEventStore.Test
             // Then
             await Assert.ThrowsAsync<SqlException>(() => _eventStoreRepository.SaveAsync(aggregateRecord2, eventRecords2));
         }
+
+        [Fact]
+        public async Task GetFromSequenceAsync()
+        {
+            // Given
+            const string booId = "001";
+            var booCreated = new BooCreated(booId, 100M, false);
+            var booActivated = new BooActivated(booId);
+
+            const string fooId1 = "100";
+            var fooRegistered1 = new FooRegistered(fooId1, "testing foo 1");
+
+            const string fooId2 = "200";
+            var fooRegistered2 = new FooRegistered(fooId1, "testing foo 2");
+
+            // When
+            var aggregateRecordBoo = new AggregateRecord(booId, "Boo", 0);
+            var eventRecordsBoo = new List<EventRecord<DomainEvent>>
+            {
+                new EventRecord<DomainEvent>(booCreated.Id, booCreated.CreatedAt, booCreated),
+                new EventRecord<DomainEvent>(booCreated.Id, booActivated.CreatedAt, booActivated)
+            };
+
+            await _eventStoreRepository.SaveAsync(aggregateRecordBoo, eventRecordsBoo).ConfigureAwait(false);
+
+            var aggregateRecordFoo1 = new AggregateRecord(fooId1, "Foo", 0);
+            var eventRecordsFoo1 = new List<EventRecord<DomainEvent>>
+            {
+                new EventRecord<DomainEvent>(fooRegistered1.Id, fooRegistered1.CreatedAt, fooRegistered1)
+            };
+
+            await _eventStoreRepository.SaveAsync(aggregateRecordFoo1, eventRecordsFoo1).ConfigureAwait(false);
+
+            var aggregateRecordFoo2 = new AggregateRecord(fooId2, "Foo", 0);
+            var eventRecordsFoo2 = new List<EventRecord<DomainEvent>>
+            {
+                new EventRecord<DomainEvent>(fooRegistered2.Id, fooRegistered2.CreatedAt, fooRegistered2)
+            };
+
+            await _eventStoreRepository.SaveAsync(aggregateRecordFoo2, eventRecordsFoo2).ConfigureAwait(false);
+
+            // Then
+            var resultsBoo = await _eventStoreRepository.GetAsync<DomainEvent>(booId).ConfigureAwait(false);
+
+            Assert.Equal(1, resultsBoo.Count);
+            Assert.Equal(booCreated.GetType(), resultsBoo.Single(x => x.AggregateId == booId).Event.GetType());
+        }
     }
 }

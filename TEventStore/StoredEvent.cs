@@ -2,7 +2,7 @@
 
 namespace TEventStore
 {
-    public sealed class StoredEvent
+    internal sealed class StoredEvent
     {
         public string AggregateId { get; set; }
         public string Aggregate { get; set; }
