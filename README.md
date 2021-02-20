@@ -47,21 +47,21 @@ Unique non clustered index ```ConcurrencyCheckIndex``` does not allow saving two
 
 ## Releases
 
-Previous releases:
-v1.0.0 - contains methods for storing and fetching events from event store - ```SaveAsync``` ```GetAsync```
-v1.1.0 - provides additional method ```GetFromSequenceAsync``` that can be used for fetching events from certain sequence with adjustable events chunk size 
+### Previous
+- v1.0.0 - contains methods for storing and fetching events from event store - ```SaveAsync``` ```GetAsync```
+- v1.1.0 - provides additional method ```GetFromSequenceAsync``` that can be used for fetching events from certain sequence with adjustable events chunk size 
 
-Latest release:
-v1.1.1 - resolves a bug related to ```GetFromSequenceAsync``` method
+### Latest
+- v1.1.1 - resolves a bug related to ```GetFromSequenceAsync``` method
 
-Next release:
-v.1.1.2 - will change ```Sequence``` type from ```int``` to ```long```
+### Next
+- v.1.1.2 - will change ```Sequence``` type from ```int``` to ```long```
 
-Planned releases:
-v.1.2.0 - will improve error handling with custom exceptions
-v.1.3.0 - will handle creating ```EventStore``` table to avoid having to trigger sql script before using the package
-v.1.4.0 - will provide configurable ```EventStore``` table's, schema's and certain columns' names
-v.1.5.0 - will enable encryption of ```EventStore``` data
+### Planned
+- v.1.2.0 - will improve error handling with custom exceptions
+- v.1.3.0 - will handle creating ```EventStore``` table to avoid having to trigger sql script before using the package
+- v.1.4.0 - will provide configurable ```EventStore``` table's, schema's and certain columns' names
+- v.1.5.0 - will enable encryption of ```EventStore``` data
 
  
 
