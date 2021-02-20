@@ -1,5 +1,6 @@
 language: shell
 os: windows
+dist: trusty
 
 before_script:
 - choco install mssqlserver2014-sqllocaldb
