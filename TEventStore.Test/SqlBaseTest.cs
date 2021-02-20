@@ -20,11 +20,7 @@ namespace TEventStore.Test
 
         private void CreateDatabase()
         {
-            var createDatabase =
-                @$"IF NOT EXISTS(SELECT * FROM sys.databases WHERE Name = '{Database}') 
-                    BEGIN 
-                        CREATE DATABASE {Database} 
-                    END;";
+            var createDatabase = @$"CREATE DATABASE {Database};";
 
             using var masterConnection = new SqlConnection(MasterConnectionString);
 
@@ -40,12 +36,9 @@ namespace TEventStore.Test
         private void DeleteDatabase()
         {
             var dropDatabase =
-                $@"USE master; 
-                IF EXISTS(SELECT * FROM sys.databases WHERE Name = '{Database}') 
-                BEGIN 
-                    ALTER DATABASE {Database} SET SINGLE_USER WITH ROLLBACK IMMEDIATE;
-                    DROP DATABASE {Database} 
-                END;";
+                $@"USE master;                 
+                ALTER DATABASE {Database} SET SINGLE_USER WITH ROLLBACK IMMEDIATE;
+                DROP DATABASE {Database};";
 
             using var connection = new SqlConnection(ConnectionString);
 
@@ -53,8 +46,7 @@ namespace TEventStore.Test
         }
 
         private const string CreateEventStoreTable = 
-            @"BEGIN
-                CREATE TABLE [dbo].[EventStore] (
+            @"CREATE TABLE [dbo].[EventStore] (
                 [Id] UNIQUEIDENTIFIER NOT NULL,
                 [Name] NVARCHAR(100) NOT NULL,
                 [AggregateId] NVARCHAR(100) NOT NULL,
@@ -62,19 +54,16 @@ namespace TEventStore.Test
                 [Version] INT NOT NULL,
                 [Sequence] INT IDENTITY(1,1) NOT NULL,
                 [CreatedAt] DATETIME2(7) NOT NULL,
-                [Payload] NVARCHAR(MAX) NOT NULL) ON [PRIMARY] TEXTIMAGE_ON [PRIMARY];
+                [Payload] NVARCHAR(MAX) NOT NULL) ON [PRIMARY] TEXTIMAGE_ON [PRIMARY];          
 
-                DROP INDEX IF EXISTS [ConcurrencyCheckIndex] ON [dbo].[EventStore];
-
-                CREATE UNIQUE NONCLUSTERED INDEX [ConcurrencyCheckIndex] ON [dbo].[EventStore]
-                    ([Version] ASC, [AggregateId] ASC) WITH (
-                    PAD_INDEX = OFF,
-                    STATISTICS_NORECOMPUTE = OFF,
-                    SORT_IN_TEMPDB = OFF,
-                    IGNORE_DUP_KEY = OFF,
-                    DROP_EXISTING = OFF, ONLINE = OFF,
-                    ALLOW_ROW_LOCKS = ON,
-                    ALLOW_PAGE_LOCKS = ON) ON [PRIMARY];
-            END;";
+            CREATE UNIQUE NONCLUSTERED INDEX [ConcurrencyCheckIndex] ON [dbo].[EventStore]
+                ([Version] ASC, [AggregateId] ASC) WITH (
+                PAD_INDEX = OFF,
+                STATISTICS_NORECOMPUTE = OFF,
+                SORT_IN_TEMPDB = OFF,
+                IGNORE_DUP_KEY = OFF,
+                DROP_EXISTING = OFF, ONLINE = OFF,
+                ALLOW_ROW_LOCKS = ON,
+                ALLOW_PAGE_LOCKS = ON) ON [PRIMARY];";
     }
 }
