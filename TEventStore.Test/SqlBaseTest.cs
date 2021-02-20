@@ -21,7 +21,7 @@ namespace TEventStore.Test
         private void CreateDatabase()
         {
             var createDatabase =
-                @$"IF NOT EXISTS(SELECT * FROM sys.databases WHERE Name = '{Database}') 
+                $@"IF NOT EXISTS(SELECT * FROM sys.databases WHERE Name = '{Database}') 
                     BEGIN 
                         CREATE DATABASE {Database} 
                     END;";
