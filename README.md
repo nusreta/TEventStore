@@ -3,6 +3,8 @@
 
 [![Build Status](https://travis-ci.org/nusreta/TEventStore.svg?branch=main)](https://travis-ci.org/nusreta/TEventStore) [![NuGet Version and Downloads count](https://buildstats.info/nuget/TEventStore)](https://www.nuget.org/packages/TEventStore)
 
+ ``` Dapper v2.0.78 ``` ``` Newtonsoft.Json v12.0.3 ``` ``` System.Data.SqlClient v4.8.2 ```
+
 
 The package handles any type of domain event. Domain events do not need to inherit specific interface. 
 ```TEventStore``` serializes and stores a domain event in ```MSSQL``` database as ```JSON``` with additional aggregate root's metadata.
