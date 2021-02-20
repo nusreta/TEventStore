@@ -37,7 +37,7 @@ namespace TEventStore
 
             await using var connection = _sqlConnectionFactory.SqlConnection();
 
-            await connection.ExecuteAsync(StoredEvent.InsertQuery, records);
+            await connection.ExecuteAsync(StoredEvent.InsertQuery, records).ConfigureAwait(false);
         }
 
         public async Task<IReadOnlyCollection<EventStoreRecord<T>>> GetAsync<T>(string aggregateId)
@@ -47,7 +47,9 @@ namespace TEventStore
             await using var connection = _sqlConnectionFactory.SqlConnection();
 
             var storedEvents = (await connection
-                .QueryAsync<StoredEvent>(StoredEvent.SelectQuery, new { AggregateId = aggregateId })).ToList().AsReadOnly();
+                .QueryAsync<StoredEvent>(StoredEvent.SelectQuery, new { AggregateId = aggregateId })
+                .ConfigureAwait(false))
+                .ToList().AsReadOnly();
 
             if (!storedEvents.Any()) return new List<EventStoreRecord<T>>();
 
@@ -69,7 +71,9 @@ namespace TEventStore
             await using var connection = _sqlConnectionFactory.SqlConnection();
 
             var storedEvents = (await connection
-                .QueryAsync<StoredEvent>(sql, new { Sequence = sequence, Take = take })).ToList().AsReadOnly();
+                .QueryAsync<StoredEvent>(sql, new { Sequence = sequence, Take = take })
+                .ConfigureAwait(false))
+                .ToList().AsReadOnly();
 
             if (!storedEvents.Any()) return new List<EventStoreRecord<T>>();
 
