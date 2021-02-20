@@ -20,7 +20,7 @@ namespace TEventStore.Test
 
         private void CreateDatabase()
         {
-            var createDatabase = @$"CREATE DATABASE {Database};";
+            var createDatabase = $@"CREATE DATABASE {Database};";
 
             using var masterConnection = new SqlConnection(MasterConnectionString);
 
