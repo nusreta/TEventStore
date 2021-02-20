@@ -57,13 +57,13 @@ Unique non clustered index ```ConcurrencyCheckIndex``` does not allow saving two
 - v1.1.1 - resolves a bug related to ```GetFromSequenceAsync``` method
 
 ### Next
-- v.1.1.2 - will change ```Sequence``` type from ```int``` to ```long```
+- v1.1.2 - will change ```Sequence``` type from ```int``` to ```long```
 
 ### Planned
-- v.1.2.0 - will improve error handling with custom exceptions
-- v.1.3.0 - will handle creating ```EventStore``` table to avoid having to trigger sql script before using the package
-- v.1.4.0 - will provide configurable ```EventStore``` table's, schema's and certain columns' names
-- v.1.5.0 - will enable encryption of ```EventStore``` data
+- v1.2.0 - will improve error handling with custom exceptions
+- v1.3.0 - will handle creating ```EventStore``` table to avoid having to trigger sql script before using the package
+- v1.4.0 - will provide configurable ```EventStore``` table's, schema's and certain columns' names
+- v1.5.0 - will enable encryption of ```EventStore``` data
 
  
 
