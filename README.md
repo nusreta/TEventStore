@@ -36,6 +36,9 @@ public interface IEventStoreRepository
    Task SaveAsync<T>(AggregateRecord aggregateRecord, IReadOnlyCollection<EventRecord<T>> eventRecords);
    Task<IReadOnlyCollection<EventStoreRecord<T>>> GetAsync<T>(string aggregateId);
    Task<IReadOnlyCollection<EventStoreRecord<T>>> GetFromSequenceAsync<T>(int sequence, int? take = null);
+   Task<IReadOnlyCollection<EventStoreRecord<T>>> GetUntilAsync<T>(string aggregateId, Guid eventId);
+   Task<IReadOnlyCollection<EventStoreRecord<T>>> GetUntilAsync<T>(string aggregateId, int sequence);
+   Task<int> GetLatestSequence();
 }
 ```
 
@@ -52,18 +55,16 @@ Unique non clustered index ```ConcurrencyCheckIndex``` does not allow saving two
 ### Previous
 - v1.0.0 - contains methods for storing and fetching events from event store - ```SaveAsync``` ```GetAsync```
 - v1.1.0 - provides additional method ```GetFromSequenceAsync``` that can be used for fetching events from certain sequence with adjustable events chunk size 
-
-### Latest
 - v1.1.1 - resolves a bug related to ```GetFromSequenceAsync``` method
 
-### Next
-- v1.1.2 - will change ```Sequence``` type from ```int``` to ```long```
+### Latest
+- v1.2.0 - improves error handling with custom exceptions, provides additional methods  ```GetUntilAsync``` ```GetLatestSequence```
 
 ### Planned
-- v1.2.0 - will improve error handling with custom exceptions
-- v1.3.0 - will handle creating ```EventStore``` table to avoid having to trigger sql script before using the package
-- v1.4.0 - will provide configurable ```EventStore``` table's, schema's and certain columns' names
-- v1.5.0 - will enable encryption of ```EventStore``` data
+- change ```Sequence``` type from ```int``` to ```long```
+- handle creating ```EventStore``` table to avoid having to trigger sql script before using the package
+- provide configurable ```EventStore``` table's, schema's and certain columns' names
+- enable encryption of ```EventStore``` data
 
  
 

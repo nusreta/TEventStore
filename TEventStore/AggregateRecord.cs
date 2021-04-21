@@ -1,4 +1,6 @@
-﻿namespace TEventStore
+﻿using TEventStore.Exceptions;
+
+namespace TEventStore
 {
     public sealed class AggregateRecord
     {
@@ -6,6 +8,15 @@
         public string Name { get; }
         public int Version { get; }
 
-        public AggregateRecord(string id, string name, int version) => (Id, Name, Version) = (id, name, version);
+        public AggregateRecord(string id, string name, int version)
+        {
+            if (string.IsNullOrWhiteSpace(id)) throw new InvalidAggregateIdException("Id cannot be null or white space");
+
+            if (string.IsNullOrWhiteSpace(name)) throw new InvalidAggregateRecordException("Name cannot be null or white space");
+
+            if (version < 0) throw new InvalidAggregateRecordException("Version cannot be less then zero");
+
+            (Id, Name, Version) = (id, name, version);
+        }
     }
 }

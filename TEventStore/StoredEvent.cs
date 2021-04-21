@@ -33,5 +33,20 @@ namespace TEventStore
                 FROM [dbo].[EventStore] 
                 WHERE [Sequence] > @Sequence
                 ORDER BY [Sequence]";
+
+        public static string SelectUntilEventQuery =
+            @"SELECT [Id], [AggregateId], [Version], [CreatedAt], [Payload], [Sequence] 
+                FROM [dbo].[EventStore] 
+                WHERE [AggregateId] = @AggregateId AND [Sequence] <= (SELECT TOP 1 [Sequence] FROM [dbo].[EventStore] WHERE [Id] = @EventId)
+                ORDER BY [Sequence]";
+
+        public static string SelectUntilSequenceQuery =
+            @"SELECT [Id], [AggregateId], [Version], [CreatedAt], [Payload], [Sequence] 
+                FROM [dbo].[EventStore] 
+                WHERE [AggregateId] = @AggregateId AND [Sequence] <= @Sequence
+                ORDER BY [Sequence]";
+
+        public static string SelectLatestSequenceQuery =
+            @"SELECT MAX ([Sequence]) FROM [dbo].[EventStore]";
     }
 }

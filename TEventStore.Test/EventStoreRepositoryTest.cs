@@ -1,7 +1,8 @@
+using System;
 using System.Collections.Generic;
-using System.Data.SqlClient;
 using System.Linq;
 using System.Threading.Tasks;
+using TEventStore.Exceptions;
 using TEventStore.Test.DomainEvents;
 using Xunit;
 
@@ -38,6 +39,8 @@ namespace TEventStore.Test
 
             Assert.Equal(1, results.Count);
             Assert.Equal(booCreated.GetType(), results.Single(x => x.AggregateId == booId).Event.GetType());
+            Assert.Equal(booCreated.CreatedAt.ToShortTimeString(), results.Single(x => x.AggregateId == booId).CreatedAt.ToShortTimeString());
+            Assert.Equal(booCreated.Id, results.Single(x => x.AggregateId == booId).Id);
         }
 
         [Fact]
@@ -201,7 +204,7 @@ namespace TEventStore.Test
             };
 
             // Then
-            await Assert.ThrowsAsync<SqlException>(() => _eventStoreRepository.SaveAsync(aggregateRecord2, eventRecords2));
+            await Assert.ThrowsAsync<ConcurrencyCheckException>(() => _eventStoreRepository.SaveAsync(aggregateRecord2, eventRecords2));
         }
 
         [Theory]
@@ -228,7 +231,85 @@ namespace TEventStore.Test
             Assert.Equal(count, eventStoreRecords.Count);
         }
 
-       
+        [Fact]
+        public async Task GetUntilSequence_ShouldReturnAllAggregateEventStoreRecords()
+        {
+            // Given
+            await StoreFooRegistered("fooId1");
+            await StoreFooRegistered("fooId2");
+            await StoreBooCreatedAndActivated("booId1");
+
+            // When
+            var eventStoreRecords = await _eventStoreRepository.GetUntilAsync<DomainEvent>("booId1", 4).ConfigureAwait(false);
+
+            // Then
+            Assert.Equal(2, eventStoreRecords.Count);
+        }
+
+        [Fact]
+        public async Task GetUntilSequence()
+        {
+            // Given
+            await StoreFooRegistered("fooId1");
+            await StoreBooCreatedAndActivated("booId1");
+            await StoreFooRegistered("fooId2");
+
+            // When
+            var eventStoreRecords = await _eventStoreRepository.GetUntilAsync<DomainEvent>("booId1", 2).ConfigureAwait(false);
+
+            // Then
+            Assert.Equal(1, eventStoreRecords.Count);
+            Assert.Equal(typeof(BooCreated), eventStoreRecords.Single(x => x.AggregateId == "booId1").Event.GetType());
+        }
+
+        [Fact]
+        public async Task GetUntilEvent_ShouldReturnAllAggregateEventStoreRecords()
+        {
+            // Given
+            await StoreFooRegistered("fooId1");
+            var eventIds = await StoreBooCreatedAndActivated("booId1");
+            await StoreFooRegistered("fooId2");
+
+            // When
+            var eventStoreRecords = await _eventStoreRepository.GetUntilAsync<DomainEvent>("booId1", eventIds.Item2).ConfigureAwait(false);
+
+            // Then
+            Assert.Equal(2, eventStoreRecords.Count);
+        }
+
+
+        [Fact]
+        public async Task GetUntilEvent()
+        {
+            // Given
+            await StoreFooRegistered("fooId1");
+            var eventIds = await StoreBooCreatedAndActivated("booId1");
+            await StoreFooRegistered("fooId2");
+
+            // When
+            var eventStoreRecords = await _eventStoreRepository.GetUntilAsync<DomainEvent>("booId1", eventIds.Item1).ConfigureAwait(false);
+
+            // Then
+            Assert.Equal(1, eventStoreRecords.Count);
+            Assert.Equal(typeof(BooCreated), eventStoreRecords.Single(x => x.AggregateId == "booId1").Event.GetType());
+        }
+
+        [Fact]
+        public async Task GetLatestSequence()
+        {
+            // Given
+            await StoreBooCreatedAndActivated("booId1");
+            await StoreFooRegistered("fooId1");
+            await StoreFooRegistered("fooId2");
+
+            // When
+            var latestSequence = await _eventStoreRepository.GetLatestSequence().ConfigureAwait(false);
+
+            // Then
+            Assert.Equal(4, latestSequence);
+        }
+
+
         private async Task StoreFooRegistered(string fooId)
         {
             var fooRegistered1 = new FooRegistered(fooId, "testing foo");
@@ -242,7 +323,7 @@ namespace TEventStore.Test
             await _eventStoreRepository.SaveAsync(aggregateRecordFoo1, eventRecordsFoo1).ConfigureAwait(false);
         }
 
-        private async Task StoreBooCreatedAndActivated(string booId)
+        private async Task<(Guid, Guid)> StoreBooCreatedAndActivated(string booId)
         {
             var booCreated = new BooCreated(booId, 100M, false);
             var booActivated = new BooActivated(booId);
@@ -251,10 +332,12 @@ namespace TEventStore.Test
             var eventRecordsBoo = new List<EventRecord<DomainEvent>>
             {
                 new EventRecord<DomainEvent>(booCreated.Id, booCreated.CreatedAt, booCreated),
-                new EventRecord<DomainEvent>(booCreated.Id, booActivated.CreatedAt, booActivated)
+                new EventRecord<DomainEvent>(booActivated.Id, booActivated.CreatedAt, booActivated)
             };
 
             await _eventStoreRepository.SaveAsync(aggregateRecordBoo, eventRecordsBoo).ConfigureAwait(false);
+
+            return (booCreated.Id, booActivated.Id);
         }
     }
 }
