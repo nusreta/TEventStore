@@ -130,7 +130,7 @@ namespace TEventStore
                 Id = @event.Id,
                 Version = @event.Version,
                 Sequence = @event.Sequence
-            }).ToList().AsReadOnly();
+            }).OrderBy(x => x.Sequence).ToList().AsReadOnly();
         }
     }
 }
