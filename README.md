@@ -28,7 +28,7 @@ It results in creating ```dbo.EventStore``` table with following columns:
 
 ## Usage
 
-```EventStoreRepository``` implements generic methods ```SaveAsync```, ```GetAsync``` and ```GetFromSequenceAsync```.
+```EventStoreRepository``` implements generic methods ```SaveAsync```, ```GetAsync```, ```GetFromSequenceAsync```, ```GetUntilAsync``` and ```GetLatestSequence```.
 
 ```csharp
 public interface IEventStoreRepository
@@ -45,6 +45,7 @@ public interface IEventStoreRepository
 ## Concurrency check
 
 Unique non clustered index ```ConcurrencyCheckIndex``` does not allow saving two events with the same version for an aggregate root.
+On attempt to ```SaveAsync``` throws ```ConcurrencyCheckException```.
 
 ## Licence
 
@@ -56,9 +57,10 @@ Unique non clustered index ```ConcurrencyCheckIndex``` does not allow saving two
 - v1.0.0 - contains methods for storing and fetching events from event store - ```SaveAsync``` ```GetAsync```
 - v1.1.0 - provides additional method ```GetFromSequenceAsync``` that can be used for fetching events from certain sequence with adjustable events chunk size 
 - v1.1.1 - resolves a bug related to ```GetFromSequenceAsync``` method
+- v1.2.0 - improves error handling with custom exceptions, provides additional methods  ```GetUntilAsync``` ```GetLatestSequence```
 
 ### Latest
-- v1.2.0 - improves error handling with custom exceptions, provides additional methods  ```GetUntilAsync``` ```GetLatestSequence```
+- v1.2.1 - resolves a bug with order of stored events when fetching from database (now ordered by sequence)
 
 ### Planned
 - change ```Sequence``` type from ```int``` to ```long```

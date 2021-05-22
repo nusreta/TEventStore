@@ -2,15 +2,15 @@
 
   <PropertyGroup>
     <TargetFramework>netcoreapp3.1</TargetFramework>
-    <Authors>nusreta, tare</Authors>
+    <Authors>nuki, tare, bola</Authors>
     <Company>tacta.io</Company>
-    <PackageTags>eventstore</PackageTags>
+    <PackageTags>eventstore, TEventStore</PackageTags>
     <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
     <Description>https://github.com/nusreta/TEventStore/blob/main/README.md</Description>
     <PackageProjectUrl></PackageProjectUrl>
     <RepositoryUrl>https://github.com/nusreta/TEventStore</RepositoryUrl>
     <PackageLicenseExpression>Apache-2.0</PackageLicenseExpression>
-    <Version>1.2.0</Version>
+    <Version>1.2.1</Version>
   </PropertyGroup>
 
   <ItemGroup>
