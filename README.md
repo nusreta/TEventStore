@@ -58,9 +58,10 @@ On attempt to ```SaveAsync``` throws ```ConcurrencyCheckException```.
 - v1.1.0 - provides additional method ```GetFromSequenceAsync``` that can be used for fetching events from certain sequence with adjustable events chunk size 
 - v1.1.1 - resolves a bug related to ```GetFromSequenceAsync``` method
 - v1.2.0 - improves error handling with custom exceptions, provides additional methods  ```GetUntilAsync``` ```GetLatestSequence```
+- v1.2.1 - resolves a bug with order of stored events when fetching from database (now ordered by sequence)
 
 ### Latest
-- v1.2.1 - resolves a bug with order of stored events when fetching from database (now ordered by sequence)
+- v1.3.0 - multi target frameworks ```netcoreapp3.1``` ```netstandard2.0```
 
 ### Planned
 - change ```Sequence``` type from ```int``` to ```long```

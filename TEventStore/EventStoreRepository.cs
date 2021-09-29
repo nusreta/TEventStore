@@ -16,7 +16,8 @@ namespace TEventStore
         private readonly JsonSerializerSettings _jsonSerializerSettings = new JsonSerializerSettings
         {
             TypeNameHandling = TypeNameHandling.All,
-            NullValueHandling = NullValueHandling.Ignore
+            NullValueHandling = NullValueHandling.Ignore,
+            MetadataPropertyHandling = MetadataPropertyHandling.ReadAhead
         };
 
         public EventStoreRepository(ISqlConnectionFactory connectionFactory) => _sqlConnectionFactory = connectionFactory;
@@ -47,8 +48,10 @@ namespace TEventStore
 
             try
             {
-                await using var connection = _sqlConnectionFactory.SqlConnection();
-                await connection.ExecuteAsync(StoredEvent.InsertQuery, records).ConfigureAwait(false);
+                using (var connection = _sqlConnectionFactory.SqlConnection())
+                {
+                    await connection.ExecuteAsync(StoredEvent.InsertQuery, records).ConfigureAwait(false);
+                }
             }
             catch (Exception e)
             {
@@ -109,28 +112,30 @@ namespace TEventStore
 
         public async Task<int> GetLatestSequence()
         {
-            await using var connection = _sqlConnectionFactory.SqlConnection();
-
-            return await connection.QueryFirstOrDefaultAsync<int>(StoredEvent.SelectLatestSequenceQuery).ConfigureAwait(false);
+            using (var connection = _sqlConnectionFactory.SqlConnection())
+            {
+                return await connection.QueryFirstOrDefaultAsync<int>(StoredEvent.SelectLatestSequenceQuery).ConfigureAwait(false);
+            }
         }
 
         private async Task<IReadOnlyCollection<EventStoreRecord<T>>> GetAsync<T>(string query, object param)
         {
-            await using var connection = _sqlConnectionFactory.SqlConnection();
-
-            var storedEvents = (await connection.QueryAsync<StoredEvent>(query, param).ConfigureAwait(false)).ToList().AsReadOnly();
-
-            if (!storedEvents.Any()) return new List<EventStoreRecord<T>>();
-
-            return storedEvents.Select(@event => new EventStoreRecord<T>
+            using (var connection = _sqlConnectionFactory.SqlConnection())
             {
-                Event = JsonConvert.DeserializeObject<T>(@event.Payload, _jsonSerializerSettings),
-                AggregateId = @event.AggregateId,
-                CreatedAt = @event.CreatedAt,
-                Id = @event.Id,
-                Version = @event.Version,
-                Sequence = @event.Sequence
-            }).OrderBy(x => x.Sequence).ToList().AsReadOnly();
+                var storedEvents = (await connection.QueryAsync<StoredEvent>(query, param).ConfigureAwait(false)).ToList().AsReadOnly();
+
+                if (!storedEvents.Any()) return new List<EventStoreRecord<T>>();
+
+                return storedEvents.Select(@event => new EventStoreRecord<T>
+                {
+                    Event = JsonConvert.DeserializeObject<T>(@event.Payload, _jsonSerializerSettings),
+                    AggregateId = @event.AggregateId,
+                    CreatedAt = @event.CreatedAt,
+                    Id = @event.Id,
+                    Version = @event.Version,
+                    Sequence = @event.Sequence
+                }).OrderBy(x => x.Sequence).ToList().AsReadOnly();
+            }
         }
     }
 }
