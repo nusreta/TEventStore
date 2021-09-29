@@ -3,7 +3,7 @@
 
 [![Build Status](https://travis-ci.org/nusreta/TEventStore.svg?branch=main)](https://travis-ci.org/nusreta/TEventStore) [![NuGet Version and Downloads count](https://buildstats.info/nuget/TEventStore)](https://www.nuget.org/packages/TEventStore)
 
- ``` Dapper v2.0.78 ``` ``` Newtonsoft.Json v12.0.3 ``` ``` System.Data.SqlClient v4.8.2 ```
+ ``` Dapper v2.0.78 ``` ``` Newtonsoft.Json v11.0.2 ``` ``` System.Data.SqlClient v4.8.2 ```
 
 
 The package handles any type of domain event. Domain events do not need to inherit specific interface. 
@@ -59,9 +59,10 @@ On attempt to ```SaveAsync``` throws ```ConcurrencyCheckException```.
 - v1.1.1 - resolves a bug related to ```GetFromSequenceAsync``` method
 - v1.2.0 - improves error handling with custom exceptions, provides additional methods  ```GetUntilAsync``` ```GetLatestSequence```
 - v1.2.1 - resolves a bug with order of stored events when fetching from database (now ordered by sequence)
+- v1.3.0 - multi target frameworks ```netcoreapp3.1``` ```netstandard2.0```
 
 ### Latest
-- v1.3.0 - multi target frameworks ```netcoreapp3.1``` ```netstandard2.0```
+- v1.3.1 - downgrade Newtonsoft.Json to v11.0.2
 
 ### Planned
 - change ```Sequence``` type from ```int``` to ```long```
