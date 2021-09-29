@@ -4,7 +4,7 @@ mono: none
 
 before_script:
 - choco install dotnetcore-sdk
-- choco nstall dotnetstandard-sdk
+- choco install dotnetstandard-sdk
 - choco install mssqlserver2014-sqllocaldb
 - powershell -Command "Set-ExecutionPolicy Bypass"
 
