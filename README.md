@@ -60,9 +60,10 @@ On attempt to ```SaveAsync``` throws ```ConcurrencyCheckException```.
 - v1.2.0 - improves error handling with custom exceptions, provides additional methods  ```GetUntilAsync``` ```GetLatestSequence```
 - v1.2.1 - resolves a bug with order of stored events when fetching from database (now ordered by sequence)
 - v1.3.0 - multi target frameworks ```netcoreapp3.1``` ```netstandard2.0```
+- v1.3.1 - downgrade Newtonsoft.Json to v11.0.2
 
 ### Latest
-- v1.3.1 - downgrade Newtonsoft.Json to v11.0.2
+- v1.3.2 - new generic ```GetAsync``` method
 
 ### Planned
 - change ```Sequence``` type from ```int``` to ```long```

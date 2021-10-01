@@ -118,7 +118,7 @@ namespace TEventStore
             }
         }
 
-        private async Task<IReadOnlyCollection<EventStoreRecord<T>>> GetAsync<T>(string query, object param)
+        public async Task<IReadOnlyCollection<EventStoreRecord<T>>> GetAsync<T>(string query, object param)
         {
             using (var connection = _sqlConnectionFactory.SqlConnection())
             {
