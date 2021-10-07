@@ -117,23 +117,15 @@ namespace TEventStore.Test
         public async Task GivenNullAggregateRecord_WhenSaveAsync_ShouldThrowInvalidAggregateRecordException()
         {
             // Given
+            var @event = new BooCreated("AggregateId", 100M, false);
             AggregateRecord aggregateRecord = null;
-            var eventRecords = new List<EventRecord<DomainEvent>>();
+            var eventRecords = new List<EventRecord<DomainEvent>>
+            {
+                new EventRecord<DomainEvent>(Guid.NewGuid(), DateTime.Now, @event)
+            };
 
             // When + Then
             await Assert.ThrowsAsync<InvalidAggregateRecordException > (() =>
-                _eventStoreRepository.SaveAsync(aggregateRecord, eventRecords));
-        }
-
-        [Fact]
-        public async Task GivenNullEventRecords_WhenSaveAsync_ShouldThrowInvalidEventRecordException()
-        {
-            // Given
-            var aggregateRecord = new AggregateRecord("AggregateId", "AggregateName", 0);
-            List<EventRecord<DomainEvent>> eventRecords = null;
-
-            // When + Then
-            await Assert.ThrowsAsync<InvalidEventRecordException>(() =>
                 _eventStoreRepository.SaveAsync(aggregateRecord, eventRecords));
         }
 

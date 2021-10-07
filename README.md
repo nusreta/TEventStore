@@ -62,9 +62,10 @@ On attempt to ```SaveAsync``` throws ```ConcurrencyCheckException```.
 - v1.3.0 - multi target frameworks ```netcoreapp3.1``` ```netstandard2.0```
 - v1.3.1 - downgrade Newtonsoft.Json to v11.0.2
 - v1.3.2 - new generic ```GetAsync``` method
+- v1.3.3 - ```GetAsync``` method exposed via interface
 
 ### Latest
-- v1.3.3 - ```GetAsync``` method exposed via interface
+- v1.3.4 - do not throw in case of an empty events list on save
 
 ### Planned
 - change ```Sequence``` type from ```int``` to ```long```

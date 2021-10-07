@@ -45,7 +45,7 @@ namespace TEventStore.Test
             connection.Execute(dropDatabase);
         }
 
-        private const string CreateEventStoreTable = 
+        private const string CreateEventStoreTable =
             @"CREATE TABLE [dbo].[EventStore] (
                 [Id] UNIQUEIDENTIFIER NOT NULL,
                 [Name] NVARCHAR(100) NOT NULL,
@@ -64,6 +64,16 @@ namespace TEventStore.Test
                 IGNORE_DUP_KEY = OFF,
                 DROP_EXISTING = OFF, ONLINE = OFF,
                 ALLOW_ROW_LOCKS = ON,
+                ALLOW_PAGE_LOCKS = ON) ON [PRIMARY];
+
+            CREATE NONCLUSTERED INDEX [AggregateIdIndex] ON [dbo].[EventStore]
+                ([AggregateId] ASC) WITH (
+                PAD_INDEX = OFF, 
+                STATISTICS_NORECOMPUTE = OFF, 
+                SORT_IN_TEMPDB = OFF, 
+                DROP_EXISTING = OFF, 
+                ONLINE = OFF, 
+                ALLOW_ROW_LOCKS = ON, 
                 ALLOW_PAGE_LOCKS = ON) ON [PRIMARY];";
     }
 }

@@ -24,11 +24,10 @@ namespace TEventStore
 
         public async Task SaveAsync<T>(AggregateRecord aggregateRecord, IReadOnlyCollection<EventRecord<T>> eventRecords)
         {
+            if (eventRecords == null || !eventRecords.Any()) return;
+
             if (aggregateRecord == null)
                 throw new InvalidAggregateRecordException("Aggregate record cannot be null");
-
-            if (eventRecords == null || !eventRecords.Any())
-                throw new InvalidEventRecordException("Event records list cannot be null or empty");
 
             if (eventRecords.Any(x => x == null))
                 throw new InvalidEventRecordException("Event record cannot be null");
