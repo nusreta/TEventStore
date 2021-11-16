@@ -22,7 +22,7 @@ BEGIN
             ALLOW_ROW_LOCKS = ON,
             ALLOW_PAGE_LOCKS = ON) ON [PRIMARY];
             
-    CREATE NONCLUSTERED INDEX [AggregateIdIndex] ON [dbo].[EventStore]
+    CREATE CLUSTERED INDEX [AggregateIdIndex] ON [dbo].[EventStore]
         ([AggregateId] ASC) WITH (
             PAD_INDEX = OFF, 
             STATISTICS_NORECOMPUTE = OFF, 
