@@ -1,4 +1,4 @@
-# TEventStore
+# TEventStore - This package has been moved to https://github.com/tacta-io/Tacta.EventStore. TEventStore has been deprecated as it is legacy and no longer maintained. Check out Tacta.EventStore instead.
 
 
 [![Build Status](https://travis-ci.org/nusreta/TEventStore.svg?branch=main)](https://travis-ci.org/nusreta/TEventStore) [![NuGet Version and Downloads count](https://buildstats.info/nuget/TEventStore)](https://www.nuget.org/packages/TEventStore)
